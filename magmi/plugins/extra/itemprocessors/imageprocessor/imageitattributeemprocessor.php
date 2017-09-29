@@ -272,10 +272,12 @@ class ImageAttributeItemProcessor extends Magmi_ItemProcessor
     public function resetGallery($pid, $storeid, $attid)
     {
         $tgv = $this->tablename('catalog_product_entity_media_gallery_value');
+        $tgve = $this->tablename('catalog_product_entity_media_gallery_value_to_entity');
         $tg = $this->tablename('catalog_product_entity_media_gallery');
-        $sql = "DELETE emgv,emg FROM `$tgv` as emgv
-			JOIN `$tg` AS emg ON emgv.value_id = emg.value_id AND emgv.store_id=?
-			WHERE emg.entity_id=? AND emg.attribute_id=?";
+        $sql = "DELETE emgv,emg,emgve FROM `$tgv` as emgv
+            JOIN `$tg` AS emg ON emgv.value_id = emg.value_id AND emgv.store_id=?
+            join `$tgve` as emgve on emgve.value_id = emgv.value_id
+            WHERE emgv.entity_id=? AND emg.attribute_id=?";
         $this->delete($sql, array($storeid, $pid, $attid));
     }
 
