@@ -20,3 +20,11 @@ Current version in **experimental** and tested only for import simple and config
 
 **Known plugins with bugs:**
 - Image attributes processor - **"media_gallery" import not working**
+
+
+Magento CE 2.2.x Support
+========================
+
+Tested on configurable products
+
+- Fixed media_gallery import
