@@ -7,6 +7,8 @@ class Magmi_ConfigurableItemProcessor extends Magmi_ItemProcessor
     private $_optpriceinfo = array();
     private $_currentsimples = array();
 
+    private $_disabled = false;
+
     public function initialize($params)
     {
     }
@@ -24,6 +26,8 @@ class Magmi_ConfigurableItemProcessor extends Magmi_ItemProcessor
      */
     public function getConfigurableOptsFromAsId($asid)
     {
+        throw new Exception('not handled');
+
         if (!isset($this->_configurable_attrs[$asid])) {
             $ea = $this->tablename("eav_attribute");
             $eea = $this->tablename("eav_entity_attribute");
@@ -117,6 +121,11 @@ class Magmi_ConfigurableItemProcessor extends Magmi_ItemProcessor
 
     public function processItemBeforeId(&$item, $params = null)
     {
+        if (!isset($item['type'])) {
+            $this->_disabled = true;
+            return true;
+        }
+
         // if item is not configurable, nothing to do
         if ($item["type"] !== "configurable") {
             return true;
@@ -152,6 +161,11 @@ class Magmi_ConfigurableItemProcessor extends Magmi_ItemProcessor
 
     public function processItemAfterId(&$item, $params = null)
     {
+        if (!isset($item['type']) || $this->_disabled == true) {
+            //不处理
+            return true;
+        }
+
         // if item is not configurable, nothing to do
         if ($item["type"] !== "configurable") {
             if ($this->getParam("CFGR:simplesbeforeconf") == 1) {
