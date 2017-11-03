@@ -1143,7 +1143,13 @@ class Magmi_ProductImportEngine extends Magmi_Engine
             {
                 // import item
                 $this->beginTransaction();
-                $importedok = $this->importItem($item);
+                $importedok = false;
+                try {
+                    $importedok = $this->importItem($item);
+                } catch (Exception $ex) {
+                    $this->log('failed to import item' . $ex->getMessage(), 'error');
+                }
+
                 if ($importedok)
                 {
                     $res["ok"] = true;

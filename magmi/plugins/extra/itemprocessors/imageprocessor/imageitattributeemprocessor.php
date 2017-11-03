@@ -242,8 +242,8 @@ class ImageAttributeItemProcessor extends Magmi_ItemProcessor
             $sql .= "JOIN $vc ON $t.value_id=$vc.value_id WHERE $vc.attribute_id=? AND $t.entity_id=? AND $t.store_id=?";
             $imgid = $this->selectone($sql, array($refid, $pid, $store_id), 'value_id');
         } else {
-            $sql .= "JOIN $vc ON $t.value_id=$vc.value_id WHERE $vc.entity_id=? AND $vc.store_id=?";
-            $sql .= " WHERE $vc.value=? AND $vc.entity_id=? AND $t.attribute_id=?";
+            $sql .= "JOIN $vc ON $t.value_id=$vc.value_id";
+            $sql .= " WHERE $vc.value=? AND $t.entity_id=? AND $vc.attribute_id=?";
             $imgid = $this->selectone($sql, array($imgname, $pid, $attid), 'value_id');
         }
 
@@ -255,10 +255,10 @@ class ImageAttributeItemProcessor extends Magmi_ItemProcessor
 				(?,?)";
             $imgid = $this->insert($sql, array($attid, $imgname));
         } else {
-            $sql = "UPDATE $t
-				 SET value=?
-				 WHERE value_id=?";
-            $this->update($sql, array($imgname, $imgid));
+            //$sql = "UPDATE $t
+			//	 SET value=?
+			//	 WHERE value_id=?";
+            //$this->update($sql, array($imgname, $imgid));
         }
         return $imgid;
     }
@@ -331,7 +331,7 @@ class ImageAttributeItemProcessor extends Magmi_ItemProcessor
                 // insert to catalog_product_entity_media_gallery_value_to_entity
                 $galleryRelationTable = 'catalog_product_entity_media_gallery_value_to_entity';
                 $relationData = array($vid, $pid);
-                $sql_insert_relation = "INSERT INTO {$galleryRelationTable} VALUES (?, ?)";
+                $sql_insert_relation = "INSERT ignore INTO {$galleryRelationTable} VALUES (?, ?)";
                 $this->insert($sql_insert_relation, $relationData);
                 $this->exec_stmt('SET foreign_key_checks = 1');
             }
